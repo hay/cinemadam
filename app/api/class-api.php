@@ -2,6 +2,7 @@
 class Api {
     const CITY = "Amsterdam";
     const TBL_ADDRESS = 'tblAddress';
+    const TBL_ADDRESS_LINKS = 'haytblAddressLinkIdentifiers';
     const TBL_FILM = 'tblFilm';
     const TBL_FILM_VARIATION = 'tblFilmTitleVariation';
     const TBL_PROGRAMME = 'tblProgramme';
@@ -43,6 +44,12 @@ class Api {
             ->select_many(self::ADDRESS_FIELDS)
             ->where('address_id', $address_id)
             ->find_array()[0];
+
+        $address['links'] = $this->getFields(
+            self::TBL_ADDRESS_LINKS,
+            ['bag_id', 'rm_id'],
+            ['address_id', $address_id]
+        );
 
         if (!$address) {
             return ["error" => 404];
