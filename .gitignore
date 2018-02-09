@@ -2,6 +2,8 @@
 .tmp
 app/bundle.js
 app/css/style.css
+app/api/config.php
+app/api/vendor
 dist
 node_modules
 yarn.lock
