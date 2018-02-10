@@ -65,6 +65,13 @@ export default class View {
                         if (data.image) {
                             data.imageUrl = data.image.full.replace('Special:Redirect/file/', 'File:');
                         }
+
+                        data.claims.forEach((claim) => {
+                            if (claim.property_id === 'P10') {
+                                this.video = claim.values[0];
+                                this.video.src = `https://commons.wikimedia.org/wiki/Special:Redirect/file/${this.video.value}`;
+                            }
+                        });
                     });
                 }
             },
@@ -91,6 +98,7 @@ export default class View {
                 marker : {},
                 screen : 'map',
                 venue : {},
+                video : null,
                 wikidata : {}
             }
         });

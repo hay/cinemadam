@@ -118,6 +118,11 @@
                 <figcaption>Via <a target="_blank" v-bind:href="wikidata.imageUrl">Wikimedia Commons</figcaption>
             </figure>
 
+            <p v-if="address.links && address.links.vgebouwen_id">
+                Dit is een <a target="_blank" v-bind:href="'http://verdwenengebouwen.nl/gebouw/' + address.links.vgebouwen_id">
+                verdwenen gebouw</a>
+            </p>
+
             <ul class="address_list">
                 <li v-for="venue in address.venues">
                     <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
@@ -153,6 +158,12 @@
             <h2 class="film__title">{{film.title}}</h2>
 
             <p v-if="wikidata.descriptions">{{wikidata.descriptions}}</p>
+
+            <video v-if="video"
+                   class="film__video"
+                   v-bind:src="video.src"
+                   v-bind:poster="video.image.thumb"
+                   controls></video>
 
             <ul class="film__details">
                 <li v-if="film.film_year">Jaar: {{film.film_year}}</li>

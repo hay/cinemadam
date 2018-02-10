@@ -1,0 +1,5 @@
+.film {
+    &__video {
+        @include wh(100%, 70vh);
+    }
+}
