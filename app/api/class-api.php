@@ -3,6 +3,9 @@ class Api {
     const CITY = "Amsterdam";
     const TBL_ADDRESS = 'tblAddress';
     const TBL_ADDRESS_LINKS = 'haytblAddressLinkIdentifiers';
+    const TBL_CENSORSHIP = "tblCensorship";
+    const TBL_CENSORSHIP_TITLE = 'tblCensorshipTitle';
+    const TBL_CENSORSHIP_SOURCE = 'tblJoinCensorshipArchive';
     const TBL_FILM = 'tblFilm';
     const TBL_FILM_VARIATION = 'tblFilmTitleVariation';
     const TBL_PROGRAMME = 'tblProgramme';
@@ -76,11 +79,11 @@ class Api {
             self::TBL_FILM,
             ['film_id', 'title', 'film_year', 'country',
              'film_director', 'film_length', 'film_gauge',
-             'info'],
+             'info', 'imdb'],
             ["film_id", $film_id]
         )[0];
 
-        if ($variation) {
+        if (isset($variation)) {
             $film['variation'] = $variation;
         } else {
             $film['variations'] = $this->getFields(
@@ -90,6 +93,9 @@ class Api {
             );
         }
 
+        $film['censorship'] = $this->getCensorship($film_id);
+        $film['venues'] = $this->getVenuesByFilmId($film_id);
+
         return $film;
     }
 
@@ -98,7 +104,7 @@ class Api {
 
         $prog = $this->getFields(
             self::TBL_PROGRAMME,
-            ['programme_id', 'venue_id'],
+            ['programme_id', 'venue_id', 'programme_info'],
             $join
         )[0];
 
@@ -110,12 +116,16 @@ class Api {
 
         $item = $this->getFields(
             self::TBL_PROGRAMME_ITEM,
-            ['film_variation_id'],
+            ['film_id', 'film_variation_id'],
             $join
         )[0];
 
         if ($item) {
-            $prog['film'] = $this->getFilmById($item['film_variation_id']);
+            if (isset($item['film_variation_id'])) {
+                $prog['film'] = $this->getFilmById($item['film_variation_id']);
+            } else if (isset($item['film_id'])) {
+                $prog['film'] = $this->getFilmById($item['film_id']);
+            }
         }
 
         return $prog;
@@ -141,22 +151,43 @@ class Api {
         }, $venues);
     }
 
-    public function getVenueById($id) {
+    public function getVenueById($id, $getPrograms = true) {
         $venue = $this->getFields(
             self::TBL_VENUE,
             self::VENUE_FIELDS,
             ['venue_id', $id]
         )[0];
 
-        $venue['programmes'] = array_map(function($p) {
-            return $this->getProgrammeById($p['programme_id']);
-        }, $this->getFields(
-            self::TBL_PROGRAMME,
-            ['programme_id'],
-            ['venue_id', $id]
-        ));
+        if ($getPrograms) {
+            $venue['programmes'] = array_map(function($p) {
+                return $this->getProgrammeById($p['programme_id']);
+            }, $this->getFields(
+                self::TBL_PROGRAMME,
+                ['programme_id'],
+                ['venue_id', $id]
+            ));
+        }
 
         return $venue;
+    }
+
+    public function getVenuesByFilmId($id) {
+        $programmes = ORM::for_table(self::TBL_PROGRAMME_ITEM)
+            ->select('programme_id')
+            ->where_raw("`film_id` = '$id' OR `film_variation_id` LIKE '$id.%'")
+            ->find_array();
+
+        return array_map(function($p) {
+            $venue_ids = $this->getFields(
+                self::TBL_PROGRAMME,
+                ['venue_id'],
+                ['programme_id', $p['programme_id']]
+            );
+
+            return array_map(function($v) {
+                return $this->getVenueById($v['venue_id'], false);
+            }, $venue_ids)[0];
+        }, $programmes);
     }
 
     private function enrichVenue($venue) {
@@ -181,6 +212,31 @@ class Api {
         );
 
         return $venue;
+    }
+
+    private function getCensorship($film_id) {
+        $censorship = $this->getFields(
+            self::TBL_CENSORSHIP,
+            ['censorship_id', 'film_id', 'filing_nr', 'recommendation',
+             'censorship_date', 'rating', 'comment_by_censor'],
+            ['film_id', $film_id]
+        );
+
+        return array_map(function($citem) {
+            $citem['title'] = $this->getFields(
+                self::TBL_CENSORSHIP_TITLE,
+                ['title', 'censorshiptitle_note'],
+                ['censorship_id', $citem['censorship_id']]
+            );
+
+            $citem['source'] = $this->getFields(
+                self::TBL_CENSORSHIP_SOURCE,
+                ['info'],
+                ['censorship_id', $citem['censorship_id']]
+            );
+
+            return $citem;
+        }, $censorship);
     }
 
     private function getFields($table, $fields, $where) {
