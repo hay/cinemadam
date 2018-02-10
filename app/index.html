@@ -95,11 +95,24 @@
                     <ul class="gmap__list">
                         <li v-for="venue in marker.venues">
                             <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
+                            <span v-if="venue.active">
+                                ({{venue.active[0].date_opened}} - {{venue.active[0].date_closed}})
+                            </span>
                         </li>
                     </ul>
                 </div>
             </div>
 
+            <h2>Alle films met een video</h2>
+            <ul class="map__list" v-if="filmwithvideo">
+                <li v-for="film in filmwithvideo">
+                    <a v-bind:href="'#film:' + film.film_id">
+                        {{film.title}}
+                    </a>
+                </li>
+            </ul>
+
+            <h2>Alle locaties in {{city}}</h2>
             <ul class="map__list" v-show="addresses.length">
                 <li v-for="address in addresses">
                     <a v-bind:href="'#address:' + address.address_id">

@@ -27,6 +27,10 @@
         Flight::json($api->getAddressById($id));
     });
 
+    Flight::route('/film/_videos', function() use ($api) {
+        Flight::json($api->getFilmWithVideo());
+    });
+
     Flight::route('/film/@id', function($id) use($api) {
         Flight::json($api->getFilmById($id));
     });

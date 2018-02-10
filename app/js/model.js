@@ -32,6 +32,10 @@ export default class Model {
         });
     }
 
+    getFilmWithVideo() {
+        return getJson('api/film/_videos');
+    }
+
     getWikidataEntity(qid) {
         return new Promise((resolve, reject) => {
             const url = `https://api.haykranen.nl/wikidata/entity?q=${qid}`;

@@ -131,6 +131,15 @@ class Api {
         return $film;
     }
 
+    public function getFilmWithVideo() {
+        return ORM::for_table(self::TBL_FILM_VIDEO)
+            ->join(
+                self::TBL_FILM,
+                ['cinemadamFilmVideo.imdbccc', '=', 'tblFilm.imdb']
+            )
+            ->find_array();
+    }
+
     public function getProgrammeById($id) {
         $join = ['programme_id', $id];
 

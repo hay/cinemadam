@@ -22,19 +22,15 @@ export default class View {
             mounted() {
                 window.addEventListener('hashchange', this.go.bind(this));
                 this.go();
+
+                model.getFilmWithVideo().then((data) => {
+                    this.filmwithvideo = data;
+                });
             },
 
             methods : {
                 clickMarker(marker) {
-                    this.mapCenter = marker.position;
                     this.marker = marker;
-                    // window.location.hash = `address:${marker.address_id}`;
-                },
-
-                getData(path) {
-                    model.apiCall(path).then((data) => {
-                        console.log(data);
-                    });
                 },
 
                 go() {
@@ -94,6 +90,7 @@ export default class View {
                 addresses : [],
                 city : 'Amsterdam',
                 film : {},
+                filmwithvideo : [],
                 mapCenter : { lat : 52.3710755 , lng: 4.8840252},
                 marker : {},
                 screen : 'map',
