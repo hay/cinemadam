@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "008cec78de0b15fd92dcb0f0321f2739",
-    "content-hash": "7d4c1c9534f261aa7317224aa409a4aa",
+    "hash": "55ff90b0da1cfdbf3811c1f8cb8b5a4e",
+    "content-hash": "0eba4f1c108ca44ca268e0bd13b5dfa9",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -99,6 +99,49 @@
                 "query builder"
             ],
             "time": "2018-01-05 06:12:59"
+        },
+        {
+            "name": "mikecao/flight",
+            "version": "v1.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikecao/flight.git",
+                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikecao/flight/zipball/e146b8c0ddbc6384c5a66f23dea71743fc282289",
+                "reference": "e146b8c0ddbc6384c5a66f23dea71743fc282289",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "flight/autoload.php",
+                    "flight/Flight.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Cao",
+                    "email": "mike@mikecao.com",
+                    "homepage": "http://www.mikecao.com/",
+                    "role": "Original Developer"
+                }
+            ],
+            "description": "Flight is a fast, simple, extensible framework for PHP. Flight enables you to quickly and easily build RESTful web applications.",
+            "homepage": "http://flightphp.com",
+            "time": "2017-10-20 01:46:56"
         },
         {
             "name": "nikic/fast-route",

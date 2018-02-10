@@ -1,6 +1,5 @@
 <?php
 class Api {
-    const CITY = "Amsterdam";
     const TBL_ADDRESS = 'tblAddress';
     const TBL_ADDRESS_LINKS = 'haytblAddressLinkIdentifiers';
     const TBL_CENSORSHIP = "tblCensorship";
@@ -26,20 +25,16 @@ class Api {
         $this->setupDb();
     }
 
-    public function getAllAddresses($withVenues = true) {
+    public function getAddressesByCity($city) {
         $addresses = ORM::for_table(self::TBL_ADDRESS)
             ->select_many(self::ADDRESS_FIELDS)
-            ->where('city_name', self::CITY)
+            ->where('city_name', $city)
             ->find_array();
 
-        if ($withVenues) {
-            return array_map(function($address) {
-                $address['venues'] = $this->getVenuesByAddressId($address['address_id']);
-                return $address;
-            }, $addresses);
-        } else {
-            return $addresses;
-        }
+        return array_map(function($address) {
+            $address['venues'] = $this->getVenuesByAddressId($address['address_id']);
+            return $address;
+        }, $addresses);
     }
 
     public function getAddressById($address_id) {

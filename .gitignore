@@ -3,6 +3,7 @@
 app/bundle.js
 app/css/style.css
 app/api/config.php
+app/api/composer.lock
 app/api/vendor
 dist
 node_modules
