@@ -1,4 +1,11 @@
 .map {
+    &__logo {
+        @include wh(20rem);
+        border-radius: 20rem;
+        display: block;
+        @include margin-center;
+    }
+
     &__title {
         text-align: center;
         font-size: 5rem;
