@@ -1,11 +1,12 @@
 <?php
 class Api {
     const TBL_ADDRESS = 'tblAddress';
-    const TBL_ADDRESS_LINKS = 'haytblAddressLinkIdentifiers';
+    const TBL_ADDRESS_LINKS = 'cinemadamAddressLinkIdentifiers';
     const TBL_CENSORSHIP = "tblCensorship";
     const TBL_CENSORSHIP_TITLE = 'tblCensorshipTitle';
     const TBL_CENSORSHIP_SOURCE = 'tblJoinCensorshipArchive';
     const TBL_FILM = 'tblFilm';
+    const TBL_FILM_LINKS = 'cinemadamFilmLinkIdentifiers';
     const TBL_FILM_VARIATION = 'tblFilmTitleVariation';
     const TBL_PROGRAMME = 'tblProgramme';
     const TBL_PROGRAMME_DATE = 'tblProgrammeDate';
@@ -15,7 +16,7 @@ class Api {
     const TBL_VENUE_SCREENS = 'tblVenueScreen';
     const TBL_VENUE_SEATS = 'tblVenueSeats';
 
-    const ADDRESS_FIELDS = ['address_id', 'street_name', 'geodata', 'info'];
+    const ADDRESS_FIELDS = ['address_id', 'street_name', 'geodata', 'info', 'city_name'];
     const FILM_VARIATION_FIELDS = [
         'film_variation_id', 'film_id', 'title', 'language_code', 'info'
     ];
@@ -45,9 +46,13 @@ class Api {
 
         $address['links'] = $this->getFields(
             self::TBL_ADDRESS_LINKS,
-            ['bag_id', 'rm_id'],
+            ['bag_id', 'rm_id', 'wikidata_id', 'vgebouwen_id'],
             ['address_id', $address_id]
         );
+
+        if ($address['links']) {
+            $address['links'] = $address['links'][0];
+        }
 
         if (!$address) {
             return ["error" => 404];
@@ -58,7 +63,7 @@ class Api {
         return $address;
     }
 
-    public function getFilmById($film_id) {
+    public function getFilmById($film_id, $expanded = true) {
         // Film variation?
         if (strpos($film_id, ".") !== false) {
             $variation = $this->getFields(
@@ -76,7 +81,13 @@ class Api {
              'film_director', 'film_length', 'film_gauge',
              'info', 'imdb'],
             ["film_id", $film_id]
-        )[0];
+        );
+
+        if (!$film) {
+            return [ "error" => 404 ];
+        }
+
+        $film = $film[0];
 
         if (isset($variation)) {
             $film['variation'] = $variation;
@@ -88,8 +99,22 @@ class Api {
             );
         }
 
-        $film['censorship'] = $this->getCensorship($film_id);
-        $film['venues'] = $this->getVenuesByFilmId($film_id);
+        if ($expanded) {
+            $film['censorship'] = $this->getCensorship($film_id);
+            $film['venues'] = $this->getVenuesByFilmId($film_id);
+
+            $film['wikidata'] = $this->getFields(
+                self::TBL_FILM_LINKS,
+                ['wikidata'],
+                ['imdb', "tt" . $film['imdb']]
+            );
+
+            if (count($film['wikidata']) > 0) {
+                $film['wikidata'] = $film['wikidata'][0]['wikidata'];
+            } else {
+                $film['wikidata'] = null;
+            }
+        }
 
         return $film;
     }
@@ -117,9 +142,9 @@ class Api {
 
         if ($item) {
             if (isset($item['film_variation_id'])) {
-                $prog['film'] = $this->getFilmById($item['film_variation_id']);
+                $prog['film'] = $this->getFilmById($item['film_variation_id'], false);
             } else if (isset($item['film_id'])) {
-                $prog['film'] = $this->getFilmById($item['film_id']);
+                $prog['film'] = $this->getFilmById($item['film_id'], false);
             }
         }
 
@@ -151,7 +176,13 @@ class Api {
             self::TBL_VENUE,
             self::VENUE_FIELDS,
             ['venue_id', $id]
-        )[0];
+        );
+
+        if (!$venue) {
+            return [ "error" => 404 ];
+        }
+
+        $venue = $venue[0];
 
         if ($getPrograms) {
             $venue['programmes'] = array_map(function($p) {
@@ -162,6 +193,8 @@ class Api {
                 ['venue_id', $id]
             ));
         }
+
+        $venue['address'] = $this->getAddressById($venue['address_id']);
 
         return $venue;
     }
@@ -245,8 +278,15 @@ class Api {
         ORM::configure([
             "connection_string" => sprintf('mysql:host=%s;dbname=%s;', DB_HOST, DB_DATABASE),
             "username" => DB_USER,
-            "password" => DB_PASS
+            "password" => DB_PASS,
+            "logging" => DEBUG
         ]);
+
+        if (DEBUG) {
+            ORM::configure('logger', function($log_string) {
+                error_log($log_string);
+            });
+        }
     }
 
     private function jsonResponse($data) {
