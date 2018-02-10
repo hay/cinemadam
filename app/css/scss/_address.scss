@@ -1,0 +1,7 @@
+.address {
+    &__image img {
+        width: 100%;
+        object-fit: contain;
+        max-height: 60vh;
+    }
+}

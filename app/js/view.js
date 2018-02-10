@@ -56,6 +56,29 @@ export default class View {
                     }
 
                     window.scrollTo(0, 0);
+                },
+
+                populateWikidata(qid) {
+                    model.getWikidataEntity(qid).then((data) => {
+                        this.wikidata = data;
+
+                        if (data.image) {
+                            data.imageUrl = data.image.full.replace('Special:Redirect/file/', 'File:');
+                        }
+                    });
+                }
+            },
+
+            watch : {
+                'screen' : function(screen) {
+                    if (screen === 'address' && this.address.links.wikidata_id) {
+                        const qid = this.address.links.wikidata_id;
+                        this.populateWikidata(qid);
+                    }
+
+                    if (screen === 'film' && this.film.wikidata) {
+                        this.populateWikidata(this.film.wikidata);
+                    }
                 }
             },
 
@@ -67,7 +90,8 @@ export default class View {
                 mapCenter : { lat : 52.3710755 , lng: 4.8840252},
                 marker : {},
                 screen : 'map',
-                venue : {}
+                venue : {},
+                wikidata : {}
             }
         });
     }

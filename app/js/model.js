@@ -31,4 +31,13 @@ export default class Model {
             });
         });
     }
+
+    getWikidataEntity(qid) {
+        return new Promise((resolve, reject) => {
+            const url = `https://api.haykranen.nl/wikidata/entity?q=${qid}`;
+            getJson(url).then((data) => {
+                resolve(data.response[data.params.q]);
+            });
+        });
+    }
 };

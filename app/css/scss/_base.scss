@@ -13,6 +13,10 @@ a {
     color: $c-2;
 }
 
+ul {
+    margin: 2rem;
+}
+
 main[v-cloak] {
     &:before {
         font-family: sans-serif;
