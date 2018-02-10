@@ -148,6 +148,7 @@
                 <li v-for="programme in venue.programmes">
                     <a v-if="programme.film"
                        v-bind:href="'#film:' + programme.film.film_id">
+                       <span v-if="programme.film.hasvideo">🎞</span>
                         {{programme.film.title}} ({{programme.date.programme_date}})
                     </a>
                 </li>

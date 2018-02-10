@@ -8,6 +8,7 @@ class Api {
     const TBL_FILM = 'tblFilm';
     const TBL_FILM_LINKS = 'cinemadamFilmLinkIdentifiers';
     const TBL_FILM_VARIATION = 'tblFilmTitleVariation';
+    const TBL_FILM_VIDEO = 'cinemadamFilmVideo';
     const TBL_PROGRAMME = 'tblProgramme';
     const TBL_PROGRAMME_DATE = 'tblProgrammeDate';
     const TBL_PROGRAMME_ITEM = 'tblProgrammeItem';
@@ -114,6 +115,17 @@ class Api {
             } else {
                 $film['wikidata'] = null;
             }
+        }
+        // Check for full video
+        if (isset($film['imdb'])) {
+            $imdb = $film['imdb'];
+            $hasvideo = ORM::for_table(SELF::TBL_FILM_VIDEO)
+                ->where('imdb', "tt$imdb")
+                ->find_array();
+
+            $film['hasvideo'] = count($hasvideo) > 0;
+        } else {
+            $film['hasvideo'] = false;
         }
 
         return $film;
