@@ -46,6 +46,69 @@
 </head>
 <body>
     <main v-cloak>
+        <menu class="menu" v-show="screen !== 'map'">
+            <h1 class="menu__title">
+                <a href="#map">Cinémadam</a>
+            </h1>
+        </menu>
+
+        <section v-show="screen === 'map'" class="screen map">
+            <h1 class="map__title">Cinémadam</h1>
+
+            <h2 class="map__lead">
+                Een overzicht van alle historische bioscopen in {{city}} op
+                basis van de data van <strong><a href="http://cinemacontext.nl/">Cinema Context</a></strong>.
+            </h2>
+
+            <p class="map__hint" v-show="!addresses.length">Laden...</p>
+
+            <ul class="map__list" v-show="addresses.length">
+                <li v-for="address in addresses">
+                    <a v-bind:href="'#address:' + address.address_id">
+                        {{address.street_name}}
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section v-show="screen === 'address'" class="screen address">
+            <h2 class="address__title">Alle bioscopen op {{address.street_name}}</h2>
+
+            <ul class="address_list">
+                <li v-for="venue in address.venues">
+                    <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
+                </li>
+            </ul>
+        </section>
+
+        <section v-show="screen === 'venue'" class="screen venue">
+            <h2 class="venue__title">{{venue.name}}</h2>
+            <p class="venue__lead">{{venue.info}}</p>
+
+            <h3>Films gedraaid in {{venue.name}}</h3>
+            <ul class="venue__programmes">
+                <li v-for="programme in venue.programmes">
+                    <a v-if="programme.film"
+                       v-bind:href="'#film:' + programme.film.film_id">
+                        {{programme.film.title}}
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <section v-show="screen === 'film'" class="screen film">
+            <h2 class="film__title">{{film.title}}</h2>
+            <p class="film__info">{{film.country}}, {{film.info}}</p>
+
+            <h3>Bioscopen waar deze film is gedraaid</h3>
+            <ul class="film__venues">
+                <li v-for="venue in film.venues">
+                    <a v-bind:href="'#venue:' + venue.venue_id">
+                        {{venue.name}} ({{venue.address.city_name}})
+                    </a>
+                </li>
+            </ul>
+        </section>
     </main>
 
     <script src="bundle.js"></script>

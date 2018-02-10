@@ -126,19 +126,31 @@ class Api {
             self::TBL_PROGRAMME,
             ['programme_id', 'venue_id', 'programme_info'],
             $join
-        )[0];
+        );
+
+        if ($prog) {
+            $prog = $prog[0];
+        }
 
         $prog['date'] = $this->getFields(
             self::TBL_PROGRAMME_DATE,
             ['programme_date'],
             $join
-        )[0];
+        );
+
+        if ($prog['date']) {
+            $prog['date'] = $prog['date'][0];
+        }
 
         $item = $this->getFields(
             self::TBL_PROGRAMME_ITEM,
             ['film_id', 'film_variation_id'],
             $join
-        )[0];
+        );
+
+        if ($item) {
+            $item = $item[0];
+        }
 
         if ($item) {
             if (isset($item['film_variation_id'])) {

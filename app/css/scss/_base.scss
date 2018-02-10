@@ -1,12 +1,16 @@
 body {
     overflow-x: hidden;
+    font-family: $font-serif;
+    font-size: 2rem;
+    background: $c-1;
 }
 
 h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: underline;
+    color: $c-2;
 }
 
 main[v-cloak] {

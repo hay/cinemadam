@@ -1,3 +1,7 @@
 import View from './view.js';
+import Model from './model.js';
 
-new View();
+const CITY = 'Amsterdam';
+
+const model = new Model();
+window.__view__ = new View(model);

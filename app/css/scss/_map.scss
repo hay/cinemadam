@@ -1,0 +1,21 @@
+.map {
+    &__title {
+        text-align: center;
+        font-size: 5rem;
+        font-style: italic;
+        color: $c-2;
+    }
+
+    &__lead {
+        max-width: 80rem;
+        @include margin-center;
+        text-align: center;
+    }
+
+    &__hint {
+        text-align: center;
+        font-family: $font-sansserif;
+        text-transform: uppercase;
+        font-size: 3rem;
+    }
+}
