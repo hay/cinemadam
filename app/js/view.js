@@ -1,6 +1,14 @@
 import Vue from 'vue';
+import { MAPS_API_KEY } from './conf.js';
+import * as Maps from 'vue2-google-maps'
 
 const DEFAULT_SCREEN = 'map';
+
+Vue.use(Maps, {
+    load: {
+        key: MAPS_API_KEY
+    }
+});
 
 export default class View {
     constructor(model) {
@@ -17,6 +25,11 @@ export default class View {
             },
 
             methods : {
+                clickMarker(marker) {
+                    this.mapCenter = marker.position;
+                    window.location.hash = `address:${marker.address_id}`;
+                },
+
                 getData(path) {
                     model.apiCall(path).then((data) => {
                         console.log(data);
@@ -50,6 +63,7 @@ export default class View {
                 addresses : [],
                 city : 'Amsterdam',
                 film : {},
+                mapCenter : { lat : 52.3710755 , lng: 4.8840252},
                 screen : 'map',
                 venue : {}
             }

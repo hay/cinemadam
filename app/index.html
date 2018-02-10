@@ -62,6 +62,21 @@
 
             <p class="map__hint" v-show="!addresses.length">Laden...</p>
 
+            <gmap-map
+                class="map__map"
+                v-bind:center="mapCenter"
+                map-type-id="terrain"
+                v-bind:zoom="13"
+                v-if="addresses.length"
+            >
+                <gmap-marker
+                    v-for="(marker, index) in addresses"
+                    v-on:click="clickMarker(marker)"
+                    v-bind:key="index"
+                    v-bind:position="marker.position">
+                </gmap-marker>
+            </gmap-map>
+
             <ul class="map__list" v-show="addresses.length">
                 <li v-for="address in addresses">
                     <a v-bind:href="'#address:' + address.address_id">
