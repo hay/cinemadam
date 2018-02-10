@@ -27,7 +27,8 @@ export default class View {
             methods : {
                 clickMarker(marker) {
                     this.mapCenter = marker.position;
-                    window.location.hash = `address:${marker.address_id}`;
+                    this.marker = marker;
+                    // window.location.hash = `address:${marker.address_id}`;
                 },
 
                 getData(path) {
@@ -64,6 +65,7 @@ export default class View {
                 city : 'Amsterdam',
                 film : {},
                 mapCenter : { lat : 52.3710755 , lng: 4.8840252},
+                marker : {},
                 screen : 'map',
                 venue : {}
             }

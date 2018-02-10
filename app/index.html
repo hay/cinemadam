@@ -62,20 +62,43 @@
 
             <p class="map__hint" v-show="!addresses.length">Laden...</p>
 
-            <gmap-map
-                class="map__map"
-                v-bind:center="mapCenter"
-                map-type-id="terrain"
-                v-bind:zoom="13"
-                v-if="addresses.length"
-            >
-                <gmap-marker
-                    v-for="(marker, index) in addresses"
-                    v-on:click="clickMarker(marker)"
-                    v-bind:key="index"
-                    v-bind:position="marker.position">
-                </gmap-marker>
-            </gmap-map>
+            <div class="gmap">
+                <gmap-map
+                    class="gmap__map"
+                    v-bind:center="mapCenter"
+                    map-type-id="terrain"
+                    v-bind:zoom="13"
+                    v-if="addresses.length"
+                >
+                    <gmap-marker
+                        v-for="(marker, index) in addresses"
+                        v-on:click="clickMarker(marker)"
+                        v-bind:key="index"
+                        v-bind:position="marker.position">
+                    </gmap-marker>
+                </gmap-map>
+
+                <div class="gmap__info"
+                     v-show="marker.street_name">
+                    <button
+                        class="gmap__close"
+                        v-on:click="marker = {}">&times;</button>
+
+                    <h2 class="gmap__street">
+                        <a v-bind:href="'#address:' + marker.address_id">
+                            {{marker.street_name}}
+                        </a>
+                    </h2>
+
+                    <p>Deze bioscopen hebben op deze locatie gezeten</p>
+
+                    <ul class="gmap__list">
+                        <li v-for="venue in marker.venues">
+                            <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
             <ul class="map__list" v-show="addresses.length">
                 <li v-for="address in addresses">
@@ -124,6 +147,14 @@
                 </li>
             </ul>
         </section>
+
+        <footer class="footer">
+            <ul class="footer__list">
+                <li>Door <a href="https://www.haykranen.nl/?ref=cinemadam">Hay Kranen</a></li>
+                <li>Code op <a href="https://github.com/hay/cinemadam">Github</a></li>
+                <li>Data van <a href="http://cinemacontext.nl/">Cinema Context</a></li>
+            </ul>
+        </footer>
     </main>
 
     <script src="bundle.js"></script>

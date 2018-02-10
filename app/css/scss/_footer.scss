@@ -1,0 +1,16 @@
+.footer {
+    padding: 3rem 1rem;
+    border-top: 1px solid $c-2;
+
+    &__list {
+        @include flex-center(row);
+    }
+
+    &__list li {
+        list-style: none;
+        padding: 0 1rem;
+        text-transform: uppercase;
+        font-size: 1.6rem;
+        font-family: $font-sansserif;
+    }
+}

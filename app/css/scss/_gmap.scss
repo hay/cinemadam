@@ -1,0 +1,26 @@
+.gmap {
+    position: relative;
+
+    &__close {
+        float: right;
+        font-size: 4rem;
+    }
+
+    &__map {
+        @include wh(100%, 80vh);
+    }
+
+    &__info {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+        padding: 1rem;
+        background: rgba(white, 0.9);
+    }
+
+    &__list {
+        margin: 2rem;
+    }
+}
