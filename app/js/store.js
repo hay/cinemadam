@@ -6,8 +6,7 @@ import { apiCall, getMap, getFilmWithVideo, getWikidataEntity } from './api.js';
 Vue.use(Vuex);
 
 export default class {
-    constructor({ model, debug = false }) {
-        this.model = model;
+    constructor({ debug = false }) {
         this.debug = debug;
         this.instance = this.getStore();
     }
@@ -20,20 +19,18 @@ export default class {
 
             mutations : {
                 addresses(state, addresses) {
-                    state.addresses = addresses;
+                    Vue.set(state, 'addresses', addresses);
+                },
+
+                filmswithvideo(state, films) {
+                    Vue.set(state, 'filmswithvideo', films);
                 }
             },
 
             actions : {
-                loadData({ state, commit }, { name, params }) {
-                    if (name === 'home') {
-                        return new Promise((resolve, reject) => {
-                            getMap(CITY).then((data) => {
-                                commit('addresses', data);
-                                resolve();
-                            });
-                        });
-                    }
+                getHome({ commit }) {
+                    getMap(CITY).then(d => commit('addresses', d))
+                    getFilmWithVideo().then(d => commit('filmswithvideo', d));
                 }
             }
         });
@@ -45,12 +42,11 @@ export default class {
 
     getInitialState() {
         return {
-            addresses : [],
+            addresses : null,
             city : CITY,
-            filmswithvideo : [],
+            filmswithvideo : null,
             mapCenter : MAPS_CENTER,
-            mapZoom : MAPS_ZOOM,
-            model : this.model
+            mapZoom : MAPS_ZOOM
         };
     }
 };

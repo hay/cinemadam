@@ -8,8 +8,6 @@ import ScreenFilm from './components/screen-film.vue';
 import ScreenHome from './components/screen-home.vue';
 import ScreenVenue from './components/screen-venue.vue';
 
-const DEFAULT_SCREEN = 'map';
-
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
@@ -40,10 +38,6 @@ const router = new VueRouter({
 
 export default class View {
     constructor(store) {
-        router.beforeEach((to, from, next) => {
-            store.dispatch('loadData', to).then(next);
-        });
-
         this.setup(store);
     }
 
@@ -80,10 +74,6 @@ export default class View {
             },
 
             watch : {
-                'state' : function(state) {
-                    console.log(state);
-                },
-
                 'screen' : function(screen) {
                     if (screen === 'address' && this.address.links.wikidata_id) {
                         const qid = this.address.links.wikidata_id;

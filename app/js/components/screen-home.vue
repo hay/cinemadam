@@ -1,13 +1,16 @@
 <template>
     <section class="screen map">
+        <cm-menu variation="large"></cm-menu>
+
         <cm-map
+            v-if="addresses"
             v-bind:addresses="addresses"
             v-bind:center="mapCenter"
-            v-bind:zoom="13"></cm-map>
+            v-bind:zoom="mapZoom"></cm-map>
 
         <h2>Alle films met een video</h2>
-        <ul class="map__list" v-if="filmwithvideo">
-            <li v-for="film in filmwithvideo">
+        <ul class="map__list" v-if="filmswithvideo">
+            <li v-for="film in filmswithvideo">
                 <a v-bind:href="'#film:' + film.film_id">
                     {{film.title}}
                 </a>
@@ -38,7 +41,7 @@
         </ul>
 
         <h2>Alle locaties in {{city}}</h2>
-        <ul class="map__list" v-show="addresses.length">
+        <ul class="map__list" v-if="addresses">
             <li v-for="address in addresses">
                 <a v-bind:href="'#address:' + address.address_id">
                     {{address.street_name}}
@@ -49,23 +52,33 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex';
-    import CmMap from '../components/cm-map.vue';
+    import CmMap from './cm-map.vue';
+    import CmMenu from './cm-menu.vue';
+    import { CITY, MAPS_CENTER, MAPS_ZOOM } from '../conf.js';
+    import { getMap } from '../api.js';
+    import { getJson } from '../util.js';
 
     export default {
         name : 'ScreenHome',
 
-        components : {
-            CmMap
+        created() {
+            getMap(CITY).then(d => this.addresses = d);
+            getJson('api/film/_videos').then(d => this.filmswithvideo = d);
         },
 
-        computed : Object.assign(
-            mapState([
-                'addresses',
-                'filmswithvideo',
-                'mapCenter',
-                'mapZoom'
-            ])
-        )
+        components : {
+            CmMap,
+            CmMenu
+        },
+
+        data() {
+            return {
+                addresses : null,
+                city : CITY,
+                filmswithvideo : null,
+                mapCenter : MAPS_CENTER,
+                mapZoom : MAPS_ZOOM
+            };
+        }
     }
 </script>

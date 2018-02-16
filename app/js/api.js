@@ -1,13 +1,5 @@
 import { getJson } from './util.js';
 
-export function apiCall(method, id) {
-    return new Promise((resolve, reject) => {
-        getJson(`api/${method}/${id}`).then((data) => {
-            resolve(data);
-        })
-    });
-}
-
 export function getMap(city) {
     return new Promise((resolve, reject) => {
         getJson(`api/address/?city=${city}`).then((data) => {
@@ -25,10 +17,6 @@ export function getMap(city) {
             resolve(data);
         });
     });
-}
-
-export function getFilmWithVideo() {
-    return getJson('api/film/_videos');
 }
 
 export function getWikidataEntity(qid) {
