@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Vuex from 'vuex';
 import CmFooter from './components/cm-footer.vue';
 import CmMenu from './components/cm-menu.vue';
 import ScreenAddress from './components/screen-address.vue';
@@ -8,7 +7,6 @@ import ScreenFilm from './components/screen-film.vue';
 import ScreenHome from './components/screen-home.vue';
 import ScreenVenue from './components/screen-venue.vue';
 
-Vue.use(Vuex);
 Vue.use(VueRouter);
 
 const router = new VueRouter({
