@@ -1,6 +1,9 @@
 import Vue from 'vue';
 import { MAPS_API_KEY } from './conf.js';
 import * as Maps from 'vue2-google-maps'
+import CmFooter from '../components/cm-footer.vue';
+import CmMap from '../components/cm-map.vue';
+import CmMenu from '../components/cm-menu.vue';
 
 const DEFAULT_SCREEN = 'map';
 
@@ -28,11 +31,13 @@ export default class View {
                 });
             },
 
-            methods : {
-                clickMarker(marker) {
-                    this.marker = marker;
-                },
+            components : {
+                CmFooter,
+                CmMap,
+                CmMenu
+            },
 
+            methods : {
                 go() {
                     const path = window.location.hash.slice(1);
                     const parts = path.split(':');

@@ -63,6 +63,7 @@ module.exports = function (grunt) {
                         debug : true
                     },
                     transform : [
+                        'vueify',
                         ["babelify", {
                             presets : ["env"]
                         }]

@@ -46,64 +46,14 @@
 </head>
 <body>
     <main v-cloak>
-        <menu class="menu" v-show="screen !== 'map'">
-            <h1 class="menu__title">
-                <a href="#map">Cinémadam</a>
-            </h1>
-        </menu>
+        <cm-menu
+            v-bind:variation="screen === 'map' ? 'large' : 'normal'"></cm-menu>
 
         <section v-show="screen === 'map'" class="screen map">
-            <img src="img/logo.jpg" class="map__logo" />
-
-            <h1 class="map__title">Cinémadam</h1>
-
-            <h2 class="map__lead">
-                Een overzicht van alle historische bioscopen in {{city}} op
-                basis van de data van <strong><a href="http://cinemacontext.nl/">Cinema Context</a></strong>.
-            </h2>
-
-            <p class="map__hint" v-show="!addresses.length">Laden...</p>
-
-            <div class="gmap">
-                <gmap-map
-                    class="gmap__map"
-                    v-bind:center="mapCenter"
-                    map-type-id="terrain"
-                    v-bind:zoom="13"
-                    v-if="addresses.length"
-                >
-                    <gmap-marker
-                        v-for="(marker, index) in addresses"
-                        v-on:click="clickMarker(marker)"
-                        v-bind:key="index"
-                        v-bind:position="marker.position">
-                    </gmap-marker>
-                </gmap-map>
-
-                <div class="gmap__info"
-                     v-show="marker.street_name">
-                    <button
-                        class="gmap__close"
-                        v-on:click="marker = {}">&times;</button>
-
-                    <h2 class="gmap__street">
-                        <a v-bind:href="'#address:' + marker.address_id">
-                            {{marker.street_name}}
-                        </a>
-                    </h2>
-
-                    <p>Deze bioscopen hebben op deze locatie gezeten</p>
-
-                    <ul class="gmap__list">
-                        <li v-for="venue in marker.venues">
-                            <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
-                            <span v-if="venue.active">
-                                ({{venue.active[0].date_opened}} - {{venue.active[0].date_closed}})
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <cm-map
+                v-bind:addresses="addresses"
+                v-bind:center="mapCenter"
+                v-bind:zoom="13"></cm-map>
 
             <h2>Alle films met een video</h2>
             <ul class="map__list" v-if="filmwithvideo">
@@ -242,13 +192,7 @@
             </ul>
         </section>
 
-        <footer class="footer">
-            <ul class="footer__list">
-                <li>Door <a href="https://www.haykranen.nl/?ref=cinemadam">Hay Kranen</a></li>
-                <li>Code op <a href="https://github.com/hay/cinemadam">Github</a></li>
-                <li>Data van <a href="http://cinemacontext.nl/">Cinema Context</a></li>
-            </ul>
-        </footer>
+        <cm-footer></cm-footer>
     </main>
 
     <script src="bundle.js"></script>
