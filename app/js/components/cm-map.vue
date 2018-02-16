@@ -31,7 +31,7 @@
             <ul class="gmap__list">
                 <li v-for="venue in marker.venues">
                     <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
-                    <span v-if="venue.active">
+                    <span v-if="venue.active.length > 0">
                         ({{venue.active[0].date_opened}} - {{venue.active[0].date_closed}})
                     </span>
                 </li>
@@ -41,6 +41,17 @@
 </template>
 
 <script>
+    import Vue from 'vue';
+    import { MAPS_API_KEY } from '../conf.js';
+    import * as Maps from 'vue2-google-maps'
+
+    Vue.use(Maps, {
+        load: {
+            key: MAPS_API_KEY
+        }
+    });
+
+
     export default {
         data() {
             return {

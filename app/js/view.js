@@ -1,64 +1,66 @@
 import Vue from 'vue';
-import { MAPS_API_KEY } from './conf.js';
-import * as Maps from 'vue2-google-maps'
-import CmFooter from '../components/cm-footer.vue';
-import CmMap from '../components/cm-map.vue';
-import CmMenu from '../components/cm-menu.vue';
+import VueRouter from 'vue-router';
+import Vuex from 'vuex';
+import CmFooter from './components/cm-footer.vue';
+import CmMenu from './components/cm-menu.vue';
+import ScreenAddress from './components/screen-address.vue';
+import ScreenFilm from './components/screen-film.vue';
+import ScreenHome from './components/screen-home.vue';
+import ScreenVenue from './components/screen-venue.vue';
 
 const DEFAULT_SCREEN = 'map';
 
-Vue.use(Maps, {
-    load: {
-        key: MAPS_API_KEY
-    }
+Vue.use(Vuex);
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    routes : [
+        {
+            name : 'home',
+            path : '/',
+            component : ScreenHome
+        },
+        {
+            name : 'address',
+            path : '/address/:address',
+            component : ScreenAddress
+        },
+        {
+            name : 'film',
+            path : '/film/:film',
+            component : ScreenFilm
+        },
+        {
+            name : 'venue',
+            path : '/venue/:venue',
+            component : ScreenVenue
+        }
+    ]
 });
 
 export default class View {
-    constructor(model) {
-        this.setup(model);
+    constructor(store) {
+        router.beforeEach((to, from, next) => {
+            store.dispatch('loadData', to).then(next);
+        });
+
+        this.setup(store);
     }
 
-    setup(model) {
+    setup(store) {
         this.view = new Vue({
             el : "main",
 
-            mounted() {
-                window.addEventListener('hashchange', this.go.bind(this));
-                this.go();
+            router,
 
-                model.getFilmWithVideo().then((data) => {
-                    this.filmwithvideo = data;
-                });
-            },
+            store,
 
             components : {
                 CmFooter,
-                CmMap,
                 CmMenu
             },
 
             methods : {
-                go() {
-                    const path = window.location.hash.slice(1);
-                    const parts = path.split(':');
-                    const screen = parts[0];
-                    const id = parts[1];
-
-                    if (!screen || screen === DEFAULT_SCREEN) {
-                        model.getMap(this.city).then((data) => {
-                            this.addresses = data;
-                            this.screen = DEFAULT_SCREEN;
-                        });
-                    } else {
-                        model.apiCall(screen, id).then((data) => {
-                            this.screen = screen;
-                            this[screen] = data;
-                        });
-                    }
-
-                    window.scrollTo(0, 0);
-                },
-
                 populateWikidata(qid) {
                     model.getWikidataEntity(qid).then((data) => {
                         this.wikidata = data;
@@ -78,6 +80,10 @@ export default class View {
             },
 
             watch : {
+                'state' : function(state) {
+                    console.log(state);
+                },
+
                 'screen' : function(screen) {
                     if (screen === 'address' && this.address.links.wikidata_id) {
                         const qid = this.address.links.wikidata_id;
@@ -88,20 +94,6 @@ export default class View {
                         this.populateWikidata(this.film.wikidata);
                     }
                 }
-            },
-
-            data : {
-                address : {},
-                addresses : [],
-                city : 'Amsterdam',
-                film : {},
-                filmwithvideo : [],
-                mapCenter : { lat : 52.3710755 , lng: 4.8840252},
-                marker : {},
-                screen : 'map',
-                venue : {},
-                video : null,
-                wikidata : {}
             }
         });
     }
