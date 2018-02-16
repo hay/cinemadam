@@ -2,14 +2,14 @@
     <menu class="menu">
         <template v-if="variation === 'normal'">
             <h1 class="menu__title">
-                <a href="#map">Cinémadam</a>
+                <a href="#/">Cinémadam</a>
             </h1>
         </template>
 
         <template v-if="variation === 'large'">
             <img src="img/logo.jpg" class="map__logo" />
 
-            <h1 class="map__title">Cinémadam</h1>
+            <a href="#/" class="map__title">Cinémadam</a>
 
             <h2 class="map__lead">
                 Een overzicht van alle historische bioscopen in {{city}} op
