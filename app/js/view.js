@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import CmFooter from './components/cm-footer.vue';
-import CmMenu from './components/cm-menu.vue';
 import ScreenAddress from './components/screen-address.vue';
 import ScreenFilm from './components/screen-film.vue';
 import ScreenHome from './components/screen-home.vue';
@@ -49,40 +48,7 @@ export default class View {
             store,
 
             components : {
-                CmFooter,
-                CmMenu
-            },
-
-            methods : {
-                populateWikidata(qid) {
-                    model.getWikidataEntity(qid).then((data) => {
-                        this.wikidata = data;
-
-                        if (data.image) {
-                            data.imageUrl = data.image.full.replace('Special:Redirect/file/', 'File:');
-                        }
-
-                        data.claims.forEach((claim) => {
-                            if (claim.property_id === 'P10') {
-                                this.video = claim.values[0];
-                                this.video.src = `https://commons.wikimedia.org/wiki/Special:Redirect/file/${this.video.value}`;
-                            }
-                        });
-                    });
-                }
-            },
-
-            watch : {
-                'screen' : function(screen) {
-                    if (screen === 'address' && this.address.links.wikidata_id) {
-                        const qid = this.address.links.wikidata_id;
-                        this.populateWikidata(qid);
-                    }
-
-                    if (screen === 'film' && this.film.wikidata) {
-                        this.populateWikidata(this.film.wikidata);
-                    }
-                }
+                CmFooter
             }
         });
     }
