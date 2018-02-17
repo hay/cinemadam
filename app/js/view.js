@@ -6,6 +6,7 @@ import ScreenAddress from './components/screen-address.vue';
 import ScreenFilm from './components/screen-film.vue';
 import ScreenHome from './components/screen-home.vue';
 import ScreenVenue from './components/screen-venue.vue';
+import './filters.js';
 
 Vue.use(VueRouter);
 

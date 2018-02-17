@@ -35,7 +35,7 @@
                 <h3>Bioscopen waar deze film is gedraaid</h3>
                 <ul class="film__venues">
                     <li v-for="venue in film.venues">
-                        <a v-bind:href="'#venue:' + venue.venue_id">
+                        <a v-bind:href="'#/venue/' + venue.venue_id">
                             {{venue.name}} ({{venue.address.city_name}})
                         </a>
                     </li>
