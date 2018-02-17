@@ -1,0 +1,23 @@
+.cm-toggler {
+    &__text {
+        font-size: 3rem;
+        display: block;
+        @include margin-center;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    &__button {
+        display: inline-block;
+        transition: 300ms;
+        transform: rotate(0deg);
+    }
+
+    &:not([open]) &__button {
+        transform: rotate(180deg);
+    }
+
+    &:not([open]) &__content {
+        display: none;
+    }
+}

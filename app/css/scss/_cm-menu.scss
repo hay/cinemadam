@@ -1,4 +1,19 @@
-.map {
+.cm-menu {
+    @include flex-center;
+    @include child-margins(1rem);
+    padding: 1rem;
+}
+
+.cm-menu--normal {
+    &__title {
+        text-align: center;
+        font-size: 3rem;
+        font-style: italic;
+        color: $c-2;
+    }
+}
+
+.cm-menu--large {
     &__logo {
         @include wh(20rem);
         border-radius: 20rem;
@@ -10,6 +25,7 @@
         text-align: center;
         font-size: 5rem;
         font-style: italic;
+        font-weight: bold;
         color: $c-2;
     }
 
@@ -17,12 +33,5 @@
         max-width: 80rem;
         @include margin-center;
         text-align: center;
-    }
-
-    &__hint {
-        text-align: center;
-        font-family: $font-sansserif;
-        text-transform: uppercase;
-        font-size: 3rem;
     }
 }

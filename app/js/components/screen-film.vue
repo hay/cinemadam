@@ -2,6 +2,8 @@
     <section class="screen film">
         <cm-menu></cm-menu>
 
+        <p class="screen__message" v-show="!film">Laden...</p>
+
         <template v-if="film">
             <h2 class="film__title">{{film.title}}</h2>
 

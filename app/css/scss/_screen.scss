@@ -3,4 +3,8 @@
     @include margin-center;
     padding: 3rem 1rem;
     @include child-margins(3rem);
+
+    &__message {
+        text-align: center;
+    }
 }

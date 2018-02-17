@@ -2,6 +2,8 @@
     <section class="screen venue">
         <cm-menu></cm-menu>
 
+        <p class="screen__message" v-show="!venue">Laden...</p>
+
         <template v-if="venue">
             <h2 class="venue__title">{{venue.name}}</h2>
             <p class="venue__lead">{{venue.info}}</p>

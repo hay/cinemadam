@@ -21,7 +21,7 @@
                 v-on:click="marker = null">&times;</button>
 
             <h2 class="gmap__street">
-                <a v-bind:href="'#address:' + marker.address_id">
+                <a v-bind:href="'#/address/' + marker.address_id">
                     {{marker.street_name}}
                 </a>
             </h2>
@@ -30,7 +30,7 @@
 
             <ul class="gmap__list">
                 <li v-for="venue in marker.venues">
-                    <a v-bind:href="'#venue:' + venue.venue_id">{{venue.name}}</a>
+                    <a v-bind:href="'#/venue/' + venue.venue_id">{{venue.name}}</a>
                     <span v-if="venue.active.length > 0">
                         ({{venue.active[0].date_opened}} - {{venue.active[0].date_closed}})
                     </span>
