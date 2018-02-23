@@ -46,8 +46,9 @@
             apiCall('address', this.$route.params.address).then((a) => {
                 this.address = a;
 
-                if (a.wikidata) {
-                    getWikidataEntity(a.wikidata).then(i => this.image = i);
+                if (a.links && a.links.wikidata_id) {
+                    const qid = a.links.wikidata_id;
+                    getWikidataEntity(qid).then(i => this.image = i.image);
                 }
             });
         },

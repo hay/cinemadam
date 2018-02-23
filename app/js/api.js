@@ -38,7 +38,8 @@ export function getWikidataEntity(qid) {
             let image, video;
 
             if (entity.image) {
-                image = entity.image.full.replace('Special:Redirect/file/', 'File:');
+                image = entity.image;
+                image.imageUrl = entity.image.full.replace('Special:Redirect/file/', 'File:');
             }
 
             entity.claims.forEach((claim) => {
