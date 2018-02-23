@@ -50,8 +50,10 @@
                     <li v-for="c in film.censorship">
                         {{c.censorship_date}}: {{c.rating}}, {{c.comment_by_censor}},
                         via
-                        <a target="_blank"
-                           v-bind:href="'http://proxy.handle.net/10648/' + c.source[0].info">Nationaal Archief</a>
+                        <a
+                            target="_blank"
+                            v-if="c.source.length"
+                            v-bind:href="'http://proxy.handle.net/10648/' + c.source[0].info">Nationaal Archief</a>
                     </li>
                 </ul>
             </template>
