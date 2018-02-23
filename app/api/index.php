@@ -5,6 +5,16 @@
 
     $api = new Api();
 
+    function json_response($data) {
+        Flight::json(
+            $data,
+            $code = 200,
+            $encode = true,
+            $charset = 'utf-8',
+            JSON_PARTIAL_OUTPUT_ON_ERROR
+        );
+    }
+
     Flight::set('flight.log_errors', DEBUG);
     Flight::set('flight.views.path', './');
 
@@ -20,27 +30,27 @@
             die();
         }
 
-        Flight::json($api->getAddressesByCity($city));
+        json_response($api->getAddressesByCity($city));
     });
 
     Flight::route('/address/@id', function($id) use($api) {
-        Flight::json($api->getAddressById($id));
+        json_response($api->getAddressById($id));
     });
 
     Flight::route('/film/_videos', function() use ($api) {
-        Flight::json($api->getFilmWithVideo());
+        json_response($api->getFilmWithVideo());
     });
 
     Flight::route('/film/@id', function($id) use($api) {
-        Flight::json($api->getFilmById($id));
+        json_response($api->getFilmById($id));
     });
 
     Flight::route('/programme/@id', function($id) use($api) {
-        Flight::json($api->getProgrammeById($id));
+        json_response($api->getProgrammeById($id));
     });
 
     Flight::route('/venue/@id', function($id) use($api) {
-        Flight::json($api->getVenueById($id));
+        json_response($api->getVenueById($id));
     });
 
     Flight::start();
